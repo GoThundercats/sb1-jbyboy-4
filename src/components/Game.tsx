@@ -11,7 +11,7 @@ const Game: React.FC = () => {
   const [bankroll, setBankroll] = useState<CardType[]>([]);
   const [easyGo, setEasyGo] = useState<CardType[]>([]);
   const [selectedCards, setSelectedCards] = useState<CardType[]>([]);
-  const [money, setMoney] = useState(10);
+  const [money, setMoney] = useState(0);
   const [score, setScore] = useState(0);
   const [strikes, setStrikes] = useState(0);
   const [message, setMessage] = useState('');
@@ -30,7 +30,8 @@ const Game: React.FC = () => {
     setBankroll([]);
     setEasyGo([]);
     setSelectedCards([]);
-    setMoney(10);
+    setMoney(0); // Set initial money to $0
+    console.log("Money set to:", 0); // Debug log
     setMessage('New round started. Select a move to begin.');
   };
 
@@ -191,6 +192,7 @@ const Game: React.FC = () => {
     setRound(1);
     setScore(0);
     setStrikes(0);
+    setMoney(0); // Ensure money is reset to $0 when starting a new game
     startNewRound();
   };
 

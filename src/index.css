@@ -11,7 +11,7 @@
 }
 
 .game-areas {
-  @apply flex flex-col space-y-4;
+  @apply flex flex-col space-y-3;
 }
 
 .bankroll-area,
@@ -20,11 +20,11 @@
 }
 
 .card-grid {
-  @apply grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-2 mb-4;
+  @apply grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-x-0.5 gap-y-2 mb-4;
 }
 
 .controls {
-  @apply flex flex-wrap gap-2 mb-4;
+  @apply flex flex-wrap gap-0.5 mb-3;
 }
 
 .controls button {
