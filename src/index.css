@@ -20,11 +20,11 @@
 }
 
 .card-grid {
-  @apply grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-x-0.5 gap-y-2 mb-4;
+  @apply grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 gap-x-1 gap-y-2 mb-4;
 }
 
 .controls {
-  @apply flex flex-wrap gap-0.5 mb-3;
+  @apply flex flex-wrap gap-1 mb-3;
 }
 
 .controls button {

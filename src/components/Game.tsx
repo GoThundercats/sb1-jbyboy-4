@@ -47,7 +47,18 @@ const Game: React.FC = () => {
     const result = haul(market, selectedCards);
     if (result.success) {
       setMarket(result.newMarket);
+      
+      // Add a fixed amount of $1 for a successful haul
+      const addedMoney = 1; // Fixed amount for a haul
+      console.log("Added Money:", addedMoney); // Check the added money
+
+      // Update bankroll and money
       setBankroll([...bankroll, ...selectedCards.map(card => ({ ...card, faceUp: false }))]);
+      setMoney(prevMoney => {
+          console.log("Previous Money:", prevMoney); // Check previous money
+          return prevMoney + addedMoney; // Update money by adding $1
+      });
+      
       setSelectedCards([]);
       setMessage('Haul successful!');
     } else {
@@ -147,11 +158,19 @@ const Game: React.FC = () => {
   };
 
   const handleEasyGo = () => {
+    // Debugging logs
+    console.log("Selected Cards:", selectedCards);
+    console.log("Current Market:", market);
+    console.log("Current Money:", money);
+
     if (selectedCards.length !== 2 || money < 1) {
       setMessage('Select exactly two adjacent cards of the same suit and ensure you have enough money.');
       return;
     }
+
     const result = performEasyGo(market, selectedCards);
+    console.log("Easy Go Result:", result); // Log the result of performEasyGo
+
     if (result.success) {
       setMarket(result.newMarket);
       setEasyGo([...easyGo, ...selectedCards]);
