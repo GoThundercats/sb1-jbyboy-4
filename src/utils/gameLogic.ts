@@ -7,15 +7,18 @@ export function initializeDeck(): Card[] {
 
   for (const suit of suits) {
     for (const rank of ranks) {
-      const value = calculateValue(rank); // Assuming you have a function to calculate value
-      deck.push({ suit, rank, faceUp: true, isZonker: false, isParkingLot: false, value });
+      let value = 0;
+      if (rank === 'A') value = 1;
+      else if (rank === 'J' || rank === 'Q' || rank === 'K') value = 10;
+      else value = parseInt(rank, 10);
+      deck.push({ suit, rank, faceUp: true, isZonker: false, isParkingLot: false});
     }
   }
   // Add Zonkers and Parking Lots
-  deck.push({ suit: '', rank: '', faceUp: true, isZonker: true, isParkingLot: false, value: 0 });
-  deck.push({ suit: '', rank: '', faceUp: true, isZonker: true, isParkingLot: false, value: 0 });
-  deck.push({ suit: '', rank: '', faceUp: true, isZonker: false, isParkingLot: true, value: 0 });
-  deck.push({ suit: '', rank: '', faceUp: true, isZonker: false, isParkingLot: true, value: 0 });
+  deck.push({ suit: '', rank: '', faceUp: true, isZonker: true, isParkingLot: false});
+  deck.push({ suit: '', rank: '', faceUp: true, isZonker: true, isParkingLot: false});
+  deck.push({ suit: '', rank: '', faceUp: true, isZonker: false, isParkingLot: true});
+  deck.push({ suit: '', rank: '', faceUp: true, isZonker: false, isParkingLot: true});
 
   return deck;
 }
