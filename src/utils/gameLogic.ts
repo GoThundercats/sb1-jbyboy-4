@@ -7,15 +7,18 @@ export function initializeDeck(): Card[] {
 
   for (const suit of suits) {
     for (const rank of ranks) {
-      deck.push({ suit, rank, faceUp: true, isZonker: false, isParkingLot: false });
+      let value = 0;
+      if (rank === 'A') value = 1;
+      else if (rank === 'J' || rank === 'Q' || rank === 'K') value = 10;
+      else value = parseInt(rank, 10);
+      deck.push({ suit, rank, faceUp: true, isZonker: false, isParkingLot: false, value });
     }
   }
-
   // Add Zonkers and Parking Lots
-  deck.push({ suit: '', rank: '', faceUp: true, isZonker: true, isParkingLot: false });
-  deck.push({ suit: '', rank: '', faceUp: true, isZonker: true, isParkingLot: false });
-  deck.push({ suit: '', rank: '', faceUp: true, isZonker: false, isParkingLot: true });
-  deck.push({ suit: '', rank: '', faceUp: true, isZonker: false, isParkingLot: true });
+  deck.push({ suit: '', rank: '', faceUp: true, isZonker: true, isParkingLot: false, value: 0 });
+  deck.push({ suit: '', rank: '', faceUp: true, isZonker: true, isParkingLot: false, value: 0 });
+  deck.push({ suit: '', rank: '', faceUp: true, isZonker: false, isParkingLot: true, value: 0 });
+  deck.push({ suit: '', rank: '', faceUp: true, isZonker: false, isParkingLot: true, value: 0 });
 
   return deck;
 }
@@ -67,27 +70,47 @@ export function performBargain(market: Card[], card1: Card, card2: Card): { succ
   return { success: true, newMarket };
 }
 
-export function performFleaHop(market: Card[], card1: Card, card2: Card): { success: boolean; newMarket: Card[] } {
-  if (card1.suit !== card2.suit) {
-    return { success: false, newMarket: market };
+export function performFleaHop(
+  market: Card[],
+  selectedCard: Card,
+  moveBy: number,
+  direction: 'left' | 'right'
+): { success: boolean; newMarket: Card[] } {
+  const currentIndex = market.indexOf(selectedCard);
+
+  if (currentIndex === -1) {
+    return { success: false, newMarket: market }; // Card not found in market
   }
 
-  const index1 = market.indexOf(card1);
-  const index2 = market.indexOf(card2);
+  // Determine the new position based on the direction and moveBy value
+  let newPosition = direction === 'left' ? currentIndex - moveBy : currentIndex + moveBy;
 
-  // Check if there's a Zonker between the cards
-  const minIndex = Math.min(index1, index2);
-  const maxIndex = Math.max(index1, index2);
-  const cardsBetween = market.slice(minIndex + 1, maxIndex);
-  if (cardsBetween.some(card => card.isZonker)) {
-    return { success: false, newMarket: market };
+  // Ensure the new position is within bounds
+  if (newPosition < 0 || newPosition >= market.length) {
+    return { success: false, newMarket: market }; // Out of bounds
   }
 
+  // Check if the landing position is valid
+  // The landing card should not be beside another card of the same suit unless it has jumped over it
+  if (
+    (newPosition > 0 && market[newPosition - 1].suit === selectedCard.suit && market[newPosition - 1] !== selectedCard) ||
+    (newPosition < market.length - 1 && market[newPosition + 1].suit === selectedCard.suit && market[newPosition + 1] !== selectedCard)
+  ) {
+    return { success: false, newMarket: market }; // Invalid landing position
+  }
+
+  // Perform the move
   const newMarket = [...market];
-  [newMarket[index1], newMarket[index2]] = [newMarket[index2], newMarket[index1]];
+  newMarket.splice(currentIndex, 1); // Remove the card being moved
+  newMarket.splice(newPosition, 0, selectedCard); // Insert it at the new position
 
   return { success: true, newMarket };
 }
+
+
+
+
+
 
 export function performDevilHop(market: Card[], selectedCards: Card[]): { success: boolean; newMarket: Card[] } {
   if (selectedCards.length !== 4) {
@@ -155,12 +178,16 @@ export function performZonkOut(market: Card[], selectedCards: Card[]): { success
   }
 
   if ((card1.isZonker && card2.isZonker) || (card1.isZonker && card2.isParkingLot) || (card1.isParkingLot && card2.isZonker)) {
-    const newMarket = market.filter(card => !selectedCards.includes(card));
-    return { success: true, newMarket, removedCards: selectedCards };
+    const zonkerToRemove = card1.isZonker ? card1 : card2;
+    const newMarket = market.filter(card => card !== zonkerToRemove);
+    const removedCard = { ...zonkerToRemove, faceUp: false }; // Ensure the card is facedown
+
+    return { success: true, newMarket, removedCards: [removedCard] };
   }
 
   return { success: false, newMarket: market, removedCards: [] };
 }
+
 
 export function performHangout(market: Card[], selectedCards: Card[]): { success: boolean; newMarket: Card[]; removedCards: Card[] } {
   if (selectedCards.length < 2) {
@@ -210,5 +237,28 @@ export function performEasyGo(market: Card[], selectedCards: Card[]): { success:
   // Remove the selected cards from the market
   const newMarket = market.filter(card => !selectedCards.includes(card));
 
+  return { success: true, newMarket };
+}
+export function performQuadrun(market: Card[], selectedCards: Card[]): { success: boolean; newMarket: Card[] } {
+  if (selectedCards.length !== 4) {
+    return { success: false, newMarket: market };
+  }
+
+  const rank = selectedCards[0].rank;
+  const isValidQuadrun = selectedCards.every(card => card.rank === rank);
+
+  if (!isValidQuadrun) {
+    return { success: false, newMarket: market };
+  }
+
+  // Check if cards are adjacent
+  const indices = selectedCards.map(card => market.indexOf(card)).sort((a, b) => a - b);
+  const isAdjacent = indices.every((index, i) => i === 0 || index === indices[i - 1] + 1);
+
+  if (!isAdjacent) {
+    return { success: false, newMarket: market };
+  }
+
+  const newMarket = market.filter(card => !selectedCards.includes(card));
   return { success: true, newMarket };
 }

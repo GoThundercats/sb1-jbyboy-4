@@ -22,11 +22,19 @@ const Rules: React.FC<RulesProps> = ({ onClose }) => {
       <h3 className="text-xl font-semibold">Basic Moves</h3>
       <ul className="list-disc list-inside">
         <li>Haul: Remove adjacent cards of the same rank</li>
-        <li>Bargain: Swap the position of any two adjacent cards for $1</li>
+        <li>Bargain ($1): Swap the position of any two adjacent cards</li>
         <li>Flea Hop: Move a card within a set of the same suit for free</li>
-        <li>Devil Hop: Move a set of four cards (one of each suit) for $3</li>
-        <li>Walky Talky: Move the middle card of a run to a matching card for $3</li>
+        <li>Devil Hop ($3): Move a set of four cards (one of each suit)</li>
+        <li>Walky Talky ($3): Move the middle card of a run to a matching card</li>
         <li>Zonk Out: Remove adjacent Zonkers or a Zonker next to a Parking Lot</li>
+        <li>Hangout ($3): Remove matching cards flanking a Parking Lot</li>
+        <li>Desperado: Turn three Royalties face-down in Easy Go for $1</li>
+        <li>Parkinglotageddon: Move a Parking Lot to Easy Go when it meets the other at the bottom</li>
+        <li>Quadrun: Haul four adjacent matching cards and a second set of four</li>
+        <li>Jamboree: No initial moves available; counts as a win with zero score</li>
+        <li>Snafu: End the round due to a mistake. First is free; subsequent ones add a strike</li>
+
+        
       </ul>
       <button
         className="mt-4 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
