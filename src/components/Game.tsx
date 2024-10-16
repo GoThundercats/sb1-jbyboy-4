@@ -243,6 +243,33 @@ const handleMoveCardToEasyGo = (card: CardType) => {
 // In the JSX (inside the bankroll area)
 
 
+const handleBankrollClick = (card: CardType) => {
+  if (money < 1) {
+    setMessage('Not enough money to move a card from Bankroll to Easy Go.');
+    return;
+  }
+
+  const result = moveCardFromBankrollToEasyGo(bankroll, easyGo, card);
+  if (result.success) {
+    setBankroll(result.newBankroll);
+    setEasyGo(result.newEasyGo);
+    setMoney(prevMoney => prevMoney - 1);
+    setMessage('Card successfully moved to Easy Go.');
+  } else {
+    setMessage('Failed to move card from Bankroll to Easy Go.');
+  }
+};
+
+// Update the onClick handler for each card in the bankroll area
+// ... existing code ...
+{bankroll.map((card, index) => ( // Ensure index is defined here
+  <Card
+    key={index} // Use the index from the map function
+    card={card} // Pass the actual card object
+    onClick={() => handleBankrollClick(card)} // Use the handleBankrollClick function
+    selected={false}
+  />
+))}
 
 
 
@@ -617,4 +644,3 @@ const handleMoveCardToEasyGo = (card: CardType) => {
 };
 
 export default Game;
-
