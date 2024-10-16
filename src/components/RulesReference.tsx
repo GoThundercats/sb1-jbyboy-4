@@ -23,7 +23,7 @@ const RulesReference: React.FC = () => {
         <li><strong>Jamboree:</strong> No initial moves available; counts as a win with zero score</li>
         <li><strong>Snafu:</strong> End the round due to a mistake. First is free; subsequent ones add a strike</li>
       </ul>
-      <p className="mt-2 text-sm italic">Game is played over 3 rounds. Score is the total of all rounds.
+      <p className="mt-2 text-sm italic">YOU CAN MOVE CARDS FROM THE BANKROLL TO EASY GO BY CLICKING CARD IN BANKROLL COST = $1. Game is played over 3 rounds. Score is the total of all rounds.
       Strategy
       Choosing which Parking Lot to move to the bottom of the deck is the first choice you make each round. Proximity to potential Hangout and Zonk Outs can inform this choice. After this, you need to build up your Bankroll – so find natural Hauls, and make Hauls with Flea Hops and Hangouts. Once you have some Bankroll you can Bargain into more Hauls. Always look at the Flea Hop potential to make a Haul. Walky Talky can help when everything is far away. Always Zonk Out. When Hauling Royalties, you always need to consider the state of the game, if you can afford to Score them as opposed to Banking them? This can be a tough choice, and can really affect the round. Royalty pairs at the edges of the market can be saved till the situation is clearer. Toward endgame, if the Market is tough, you need to figure out which Hauls to go for, considering the Flea Hops that can help. Remember, every Haul brings all the cards closer together – so even if things look bleak, you can often pull off a win.
       </p>

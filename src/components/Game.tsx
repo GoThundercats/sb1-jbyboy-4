@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Card as CardType } from '../utils/types';
-import { initializeDeck, shuffleDeck, haul, performBargain, performFleaHop, performDevilHop, performWalkyTalky, performZonkOut, performHangout, performEasyGo, performQuadrun } from '../utils/gameLogic';
+import { initializeDeck, shuffleDeck, haul, performBargain, performFleaHop, performDevilHop, performWalkyTalky, performZonkOut, performHangout, performEasyGo, performQuadrun, moveCardFromBankrollToEasyGo } from '../utils/gameLogic';
 import Card from './Card';
 import RulesModal from './RulesModal';
 import RulesReference from './RulesReference';
 
 const Game: React.FC = () => {
-  const [deck, setDeck] = useState<CardType[]>([]);
+  const [, setDeck] = useState<CardType[]>([]);
   const [market, setMarket] = useState<CardType[]>([]);
   const [bankroll, setBankroll] = useState<CardType[]>([]);
   const [easyGo, setEasyGo] = useState<CardType[]>([]);
@@ -137,13 +137,11 @@ const Game: React.FC = () => {
   
     const selectedCard = selectedCards[0];
     let suitGroup = [];
-    let startIndex = -1;
   
     // Identify all possible contiguous groups of cards with the same suit
     for (let i = 0; i < market.length; i++) {
       if (market[i].suit === selectedCard.suit) {
         if (suitGroup.length === 0) {
-          startIndex = i;
         }
         suitGroup.push(market[i]);
       } else if (suitGroup.length > 0 && market[i].suit !== selectedCard.suit) {
@@ -153,7 +151,6 @@ const Game: React.FC = () => {
         } else {
           // Reset to find another potential contiguous group
           suitGroup = [];
-          startIndex = -1;
         }
       }
     }
@@ -218,6 +215,36 @@ const Game: React.FC = () => {
       setMessage('No moves to undo.');
     }
   };
+
+  // Example update in Game.tsx
+
+// Function to handle moving a card from the bankroll to Easy Go area
+const handleMoveCardToEasyGo = (card: CardType) => {
+  if (money < 1) {
+    setMessage('Not enough money to move a card from Bankroll to Easy Go.');
+    return;
+  }
+
+  // Call game logic to move card
+  const { success, newBankroll, newEasyGo } = moveCardFromBankrollToEasyGo(bankroll, easyGo, card);
+
+  if (success) {
+    setBankroll(newBankroll);
+    setEasyGo(newEasyGo);
+    setMoney(prevMoney => prevMoney - 1);
+    setMessage('Moved card from Bankroll to Easy Go for $1.');
+  } else {
+    setMessage('Failed to move card from Bankroll to Easy Go.');
+  }
+};
+
+
+
+// In the JSX (inside the bankroll area)
+
+
+
+
 
   const handleDevilHop = () => {
     if (!parkingLotMoved) {
@@ -506,20 +533,21 @@ const Game: React.FC = () => {
         <p>Score: {score}</p>
         <p>{message}</p>
       </div>
-      <div className="game-areas">
-        <div className="bankroll-area">
-          <h2 className="text-xl font-bold mb-2">Bankroll</h2>
-          <div className="card-grid">
-            {bankroll.map((card, index) => (
-              <Card
-                key={index}
-                card={card}
-                onClick={() => {}} // No action for bankroll cards
-                selected={false}
-              />
-            ))}
-          </div>
-        </div>
+      
+      <div className="bankroll-area">
+  <h2 className="text-xl font-bold mb-2">Bankroll</h2>
+  <div className="card-grid">
+    {bankroll.map((card, index) => (
+      <Card
+        key={index}
+        card={card}
+        onClick={() => handleMoveCardToEasyGo(card)} // Add the move action to each card
+        selected={false}
+      />
+    ))}
+  </div>
+
+        
         <div className="market-area">
           <h2 className="text-xl font-bold mb-2">Market</h2>
           <div className="card-grid">

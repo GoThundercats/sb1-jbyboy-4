@@ -70,6 +70,21 @@ export function performBargain(market: Card[], card1: Card, card2: Card): { succ
   return { success: true, newMarket };
 }
 
+export function moveCardFromBankrollToEasyGo(bankroll: Card[], easyGo: Card[], selectedCard: Card): { success: boolean; newBankroll: Card[]; newEasyGo: Card[] } {
+  const cardIndex = bankroll.indexOf(selectedCard);
+  if (cardIndex === -1) {
+    return { success: false, newBankroll: bankroll, newEasyGo: easyGo }; // Card not found in bankroll
+  }
+
+  // Move the card from bankroll to easyGo
+  const newBankroll = [...bankroll];
+  newBankroll.splice(cardIndex, 1); // Remove the card from bankroll
+
+  const newEasyGo = [...easyGo, { ...selectedCard, faceUp: true }]; // Add the card to easyGo, face up
+
+  return { success: true, newBankroll, newEasyGo };
+}
+
 export function performFleaHop(
   market: Card[],
   selectedCard: Card,
@@ -106,6 +121,7 @@ export function performFleaHop(
 
   return { success: true, newMarket };
 }
+
 
 
 
