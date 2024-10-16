@@ -11,14 +11,14 @@ export function initializeDeck(): Card[] {
       if (rank === 'A') value = 1;
       else if (rank === 'J' || rank === 'Q' || rank === 'K') value = 10;
       else value = parseInt(rank, 10);
-      deck.push({ suit, rank, faceUp: true, isZonker: false, isParkingLot: false});
+      deck.push({ suit, rank, faceUp: true, isZonker: false, isParkingLot: false, value: value, });
     }
   }
   // Add Zonkers and Parking Lots
-  deck.push({ suit: '', rank: '', faceUp: true, isZonker: true, isParkingLot: false});
-  deck.push({ suit: '', rank: '', faceUp: true, isZonker: true, isParkingLot: false});
-  deck.push({ suit: '', rank: '', faceUp: true, isZonker: false, isParkingLot: true});
-  deck.push({ suit: '', rank: '', faceUp: true, isZonker: false, isParkingLot: true});
+  deck.push({ suit: '', rank: '', faceUp: true, isZonker: true, isParkingLot: false, value: 0 });
+  deck.push({ suit: '', rank: '', faceUp: true, isZonker: true, isParkingLot: false, value: 0 });
+  deck.push({ suit: '', rank: '', faceUp: true, isZonker: false, isParkingLot: true, value: 0 });
+  deck.push({ suit: '', rank: '', faceUp: true, isZonker: false, isParkingLot: true, value: 0 });
 
   return deck;
 }
